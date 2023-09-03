@@ -1,0 +1,71 @@
+defaultTasks "two","three"
+println "settin variables"
+def x = 10
+
+task xoxo {
+    doFirst {
+        println "hehe"
+    }
+}
+
+task one (dependsOn : ["xoxo"]){
+    doLast {
+        x = 22
+        println "testone"
+    }
+}
+
+println "${project.tasks.findAll(r -> r.name.equals("help"))}"
+
+task two (dependsOn: ['one','xoxo']) {
+    doLast {
+        println "testtwo" + x
+    }
+}
+
+println "testttt"
+
+task three
+
+three {
+    doLast {
+        println "hahaha"
+    }
+}
+
+if (1==2) {
+    three.dependsOn('eight','yakuza')
+}
+task eight {
+
+    doFirst {
+        println "nishu bhai"
+    }
+}
+
+task yakuza {
+    doFirst {
+        println "printing..."
+    }
+}
+
+project.gradle.taskGraph.whenReady({
+    println project.gradle.taskGraph.hasTask(eight)
+    println "${project.gradle.taskGraph.allTasks}"
+
+    project.gradle.taskGraph.allTasks.forEach (task ->
+    {
+        println task.name + " nish "
+    })
+})
+
+project.gradle.taskGraph.afterTask({
+    task ->
+        println "after  $task.name"
+})
+
+project.gradle.taskGraph.beforeTask({
+    task ->
+        println "before  $task.name"
+})
+
